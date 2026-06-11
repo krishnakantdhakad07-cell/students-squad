@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Students Squad — SMSGASC Bhopal</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ========================================
+     STUDENTS SQUAD — SMSGASC WEBSITE
+     Code by Krishnkant
+     ========================================
+     
+     WEBSITE EDIT KARNE KA TARIKA:
+     
+     1. NOTICE ADD KARNA: #notice-list ke andar .card copy karo
+     2. VIDEO ADD KARNA: .video-list mein .video-card copy karo, href mein YouTube link
+     3. LINK ADD KARNA: .link-grid mein .link-card copy karo
+     4. PHOTO ADD KARNA: img-placeholder ki jagah <img src="file.jpg">
+     5. TICKER CHANGE: .ticker-inner ke andar text badlo
+     6. STATS CHANGE: .stat ke andar .num aur .lbl badlo
+     ======================================== */
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif; background: #0a0f18; color: #e8dcc8; min-height: 100vh; }
+
+  .header { background: linear-gradient(135deg, #0f1e30 0%, #0a1525 50%, #12102a 100%); border-bottom: 2px solid #c8a45a; position: sticky; top: 0; z-index: 100; }
+  .header-top { display: flex; align-items: center; gap: 14px; padding: 12px 20px; }
+  .logo-circle { width: 50px; height: 50px; background: linear-gradient(135deg, #c8a45a, #f0c040); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: #0a1525; flex-shrink: 0; }
+  .site-brand { flex: 1; }
+  .site-brand h1 { font-size: 22px; font-weight: 800; color: #f0c040; letter-spacing: 1px; line-height: 1.1; }
+  .site-brand .squad-tag { font-size: 10px; color: #c8a45a; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+  .college-name-header { font-size: 11px; color: #a09070; line-height: 1.4; max-width: 280px; }
+  .college-name-header strong { color: #d4b87a; font-size: 12px; }
+
+  .ticker { background: #c8a45a; color: #0a1525; padding: 5px 0; font-size: 12px; font-weight: 700; overflow: hidden; white-space: nowrap; }
+  .ticker-inner { display: inline-block; animation: ticker-scroll 35s linear infinite; padding-left: 100%; }
+  @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+  .nav { background: rgba(0,0,0,0.3); border-top: 1px solid #2a3a4a; display: flex; overflow-x: auto; padding: 0 12px; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav button { background: none; border: none; color: #a09070; padding: 10px 16px; font-family: 'Baloo 2', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s; }
+  .nav button.active, .nav button:hover { color: #f0c040; border-bottom-color: #c8a45a; }
+
+  .hero { background: linear-gradient(180deg, #0f1e30 0%, #0a0f18 100%); padding: 28px 20px; text-align: center; border-bottom: 1px solid #1e2d40; }
+  .hero h2 { font-size: 22px; font-weight: 800; color: #f0c040; margin-bottom: 6px; }
+  .hero p { color: #a09070; font-size: 13px; max-width: 480px; margin: 0 auto 18px; line-height: 1.6; }
+  .stats { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .stat { background: #1a2a3a; border: 1px solid #2a3a4a; border-radius: 10px; padding: 10px 18px; text-align: center; min-width: 80px; }
+  .stat .num { font-size: 20px; font-weight: 800; color: #f0c040; }
+  .stat .lbl { font-size: 11px; color: #a09070; margin-top: 2px; }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 20px 16px; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .section-title { font-size: 17px; font-weight: 700; color: #f0c040; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #2a3a4a; display: flex; align-items: center; gap: 8px; }
+
+  .card { background: #131f2e; border: 1px solid #1e2d40; border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: border-color 0.2s, transform 0.1s; }
+  .card:hover { border-color: #c8a45a; transform: translateY(-1px); }
+  .card-header { display: flex; align-items: center; gap: 8px; }
+
+  .badge { font-size: 10px; padding: 3px 10px; border-radius: 20px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+  .badge.urgent { background: #2a1010; color: #f07070; border: 1px solid #4a2020; }
+  .badge.info   { background: #101a2a; color: #70a0f0; border: 1px solid #203050; }
+  .badge.event  { background: #0f2a15; color: #70d080; border: 1px solid #1f4a25; }
+  .badge.exam   { background: #2a1f0a; color: #f0b070; border: 1px solid #4a3010; }
+  .badge.new    { background: #1f0a2a; color: #c070f0; border: 1px solid #3a1550; }
+
+  .notice-title { font-size: 15px; font-weight: 700; color: #e8dcc8; margin-bottom: 4px; margin-top: 8px; }
+  .notice-meta  { font-size: 12px; color: #7a8a9a; }
+  .notice-desc  { font-size: 13px; color: #b0a080; margin-top: 8px; line-height: 1.7; }
+
+  .img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .img-card { background: #131f2e; border: 1px solid #1e2d40; border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.2s; }
+  .img-card:hover { border-color: #c8a45a; transform: translateY(-2px); }
+  .img-placeholder { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 40px; background: #0f1925; }
+  .img-label { padding: 8px 10px; font-size: 12px; color: #a09070; font-weight: 600; }
+  .gallery-tip { background: #131f2e; border: 1px dashed #3a4a5a; border-radius: 10px; padding: 14px; text-align: center; font-size: 13px; color: #7a8a9a; margin-top: 8px; }
+
+  .video-card { display: flex; gap: 14px; align-items: center; background: #131f2e; border: 1px solid #1e2d40; border-radius: 10px; padding: 14px; margin-bottom: 10px; cursor: pointer; text-decoration: none; transition: border-color 0.2s; }
+  .video-card:hover { border-color: #c8a45a; }
+  .video-thumb { width: 65px; height: 48px; background: #0f1925; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; border: 1px solid #2a3a4a; }
+  .vtitle { font-size: 14px; font-weight: 700; color: #e8dcc8; }
+  .vmeta  { font-size: 12px; color: #7a8a9a; margin-top: 4px; }
+  .vplatform { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 700; margin-left: 6px; }
+  .vplatform.yt    { background: #2a1010; color: #f07070; }
+  .vplatform.drive { background: #0f2010; color: #70c080; }
+  .vplatform.other { background: #101a2a; color: #70a0f0; }
+
+  .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+  .link-card { background: #131f2e; border: 1px solid #1e2d40; border-radius: 12px; padding: 16px 12px; text-align: center; cursor: pointer; text-decoration: none; display: block; transition: all 0.2s; }
+  .link-card:hover { border-color: #c8a45a; background: #1a2a3a; transform: translateY(-2px); }
+  .link-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+  .link-name  { font-size: 13px; font-weight: 700; color: #e8dcc8; }
+  .link-desc  { font-size: 11px; color: #7a8a9a; margin-top: 4px; line-height: 1.4; }
+
+  .contact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .contact-card { background: #131f2e; border: 1px solid #1e2d40; border-radius: 12px; padding: 16px; transition: border-color 0.2s; }
+  .contact-card:hover { border-color: #c8a45a; }
+  .contact-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #1a3a5a, #0f2535); border: 2px solid #c8a45a; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 10px; }
+  .contact-name { font-size: 14px; font-weight: 700; color: #f0c040; margin-bottom: 3px; }
+  .contact-role { font-size: 12px; color: #a09070; margin-bottom: 10px; }
+  .contact-info { font-size: 13px; color: #b0a080; }
+  .contact-info div { margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+
+  .search-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+  .search-bar input { flex: 1; background: #131f2e; border: 1px solid #2a3a4a; border-radius: 8px; padding: 9px 14px; color: #e8dcc8; font-family: 'Baloo 2', sans-serif; font-size: 13px; outline: none; transition: border-color 0.2s; }
+  .search-bar input:focus { border-color: #c8a45a; }
+  .search-bar input::placeholder { color: #5a6a7a; }
+  .search-bar button { background: #c8a45a; border: none; color: #0a1525; padding: 9px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px; font-family: 'Baloo 2', sans-serif; }
+  .search-bar button:hover { background: #f0c040; }
+  .more-btn { background: transparent; border: 1px solid #c8a45a; color: #c8a45a; padding: 10px 20px; border-radius: 8px; font-family: 'Baloo 2', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 4px; transition: all 0.2s; }
+  .more-btn:hover { background: #c8a45a; color: #0a1525; }
+
+  .footer { background: #070d16; border-top: 1px solid #1e2d40; padding: 24px 20px; text-align: center; margin-top: 40px; }
+  .footer .squad-name { font-size: 20px; font-weight: 800; color: #f0c040; letter-spacing: 3px; }
+  .footer .college-full { font-size: 12px; color: #7a8a9a; margin: 8px 0; line-height: 1.7; }
+  .footer .divider { width: 60px; height: 2px; background: linear-gradient(90deg, transparent, #c8a45a, transparent); margin: 10px auto; }
+  .footer .code-by { font-size: 14px; color: #c8a45a; font-weight: 700; margin-top: 10px; letter-spacing: 1px; }
+  .footer .code-by span { color: #f0c040; font-size: 16px; }
+  .footer .copy { font-size: 11px; color: #3a4a5a; margin-top: 8px; }
+
+  @media (max-width: 480px) {
+    .site-brand h1 { font-size: 17px; }
+    .college-name-header { display: none; }
+    .hero h2 { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo-circle">SS</div>
+    <div class="site-brand">
+      <h1>STUDENTS SQUAD</h1>
+      <div class="squad-tag">Your College, Your Info</div>
+    </div>
+    <div class="college-name-header">
+      <strong>SHRIMANT MADHAVRAO SCINDIA</strong><br>
+      Govt. Adarsh Science College, Bhopal
+    </div>
+  </div>
+
+  <!-- TICKER: Yahan apne announcements likho, bullet • se alag karo -->
+  <div class="ticker">
+    <span class="ticker-inner">
+      📢 Semester Exams 10 June se shuru &nbsp;•&nbsp;
+      🎯 Placement Drive: TCS, Infosys — Register Now &nbsp;•&nbsp;
+      📝 Exam Fee Last Date: 5 June 2026 &nbsp;•&nbsp;
+      🏆 Cultural Fest RANG 2026: 20-22 June &nbsp;•&nbsp;
+      📚 Library Timing Extended: 7 AM – 10 PM &nbsp;•&nbsp;
+      🌟 Students Squad — SMSGASC ka apna platform
+    </span>
+  </div>
+
+  <nav class="nav">
+    <button class="active" onclick="showSection('home',this)">🏠 Home</button>
+    <button onclick="showSection('notices',this)">📢 Notices</button>
+    <button onclick="showSection('gallery',this)">🖼️ Gallery</button>
+    <button onclick="showSection('videos',this)">▶️ Videos</button>
+    <button onclick="showSection('links',this)">🔗 Links</button>
+    <button onclick="showSection('contacts',this)">📞 Contacts</button>
+  </nav>
+</div>
+
+<!-- HOME -->
+<div id="home" class="section active">
+  <div class="hero">
+    <h2>📚 SMSGASC Students ke liye</h2>
+    <p>Shrimant Madhavrao Scindia Govt. Adarsh Science College ke sabhi updates, notices, events aur resources ek hi jagah — Students Squad par</p>
+    <!-- STATS: Apne college ke numbers yahan dalo -->
+    <div class="stats">
+      <div class="stat"><div class="num">1,500+</div><div class="lbl">Students</div></div>
+      <div class="stat"><div class="num">60+</div><div class="lbl">Faculty</div></div>
+      <div class="stat"><div class="num">8</div><div class="lbl">Departments</div></div>
+      <div class="stat"><div class="num">Active</div><div class="lbl">Updates</div></div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="section-title">🔔 Latest Notices</div>
+    <div class="card">
+      <div class="card-header"><span class="badge urgent">URGENT</span></div>
+      <div class="notice-title">Semester Exam Time Table Released</div>
+      <div class="notice-meta">📅 3 June 2026 &nbsp;•&nbsp; 📋 Exam Cell</div>
+      <div class="notice-desc">End semester exams 10 June 2026 se shuru honge. Sabhi students apna admit card college portal se download kar lein.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="badge event">EVENT</span></div>
+      <div class="notice-title">TCS Campus Placement Drive — 15 June</div>
+      <div class="notice-meta">📅 1 June 2026 &nbsp;•&nbsp; 🏢 T&P Cell</div>
+      <div class="notice-desc">Final year students ke liye TCS placement drive hogi. Registration Important Links section mein hai.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="badge exam">EXAM</span></div>
+      <div class="notice-title">Exam Fee Last Date — 5 June 2026</div>
+      <div class="notice-meta">📅 28 May 2026 &nbsp;•&nbsp; 💰 Accounts</div>
+      <div class="notice-desc">Exam fee jama karne ki last date 5 June hai. Late fee ke saath 10 June tak. Online payment available.</div>
+    </div>
+    <button class="more-btn" onclick="showSection('notices',document.querySelectorAll('.nav button')[1])">Sabhi Notices Dekho →</button>
+  </div>
+</div>
+
+<!-- NOTICES -->
+<div id="notices" class="section">
+  <div class="container">
+    <div class="section-title">📢 Sabhi Notices & Announcements</div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Notice dhundo... (exam, event, scholarship...)" oninput="filterNotices()">
+      <button onclick="filterNotices()">🔍 Search</button>
+    </div>
+    <div id="notice-list">
+
+      <div class="card">
+        <div class="card-header"><span class="badge urgent">URGENT</span></div>
+        <div class="notice-title">Semester Exam Time Table Released</div>
+        <div class="notice-meta">📅 3 June 2026 &nbsp;•&nbsp; 📋 Exam Cell &nbsp;•&nbsp; SMSGASC Bhopal</div>
+        <div class="notice-desc">End semester exams 10 June 2026 se shuru honge. Admit card college portal se download karein. Koi problem ho to Exam Cell Room No. 5 mein sampark karein.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge event">EVENT</span></div>
+        <div class="notice-title">TCS Campus Placement Drive — 15 June 2026</div>
+        <div class="notice-meta">📅 1 June 2026 &nbsp;•&nbsp; 🏢 Training & Placement Cell</div>
+        <div class="notice-desc">Final year students ke liye TCS placement drive 15 June ko hogi. Eligibility: 60% throughout, no active backlogs. Resume portal par upload karein. Formal dress mandatory.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge exam">EXAM</span></div>
+        <div class="notice-title">Exam Fee Jama Karne Ki Last Date</div>
+        <div class="notice-meta">📅 28 May 2026 &nbsp;•&nbsp; 💰 Accounts Section</div>
+        <div class="notice-desc">Semester exam fee last date 5 June 2026 hai. Late fee ke saath 10 June tak. SBI Collect ya accounts office mein cash payment karein.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge event">EVENT</span></div>
+        <div class="notice-title">Annual Cultural Fest — RANG 2026</div>
+        <div class="notice-meta">📅 25 May 2026 &nbsp;•&nbsp; 🎭 Student Council</div>
+        <div class="notice-desc">RANG 2026 cultural fest 20-22 June ko hoga. Registration free. Dance, Music, Drama, Rangoli, Debate competitions. Registration form Important Links mein hai.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge info">INFO</span></div>
+        <div class="notice-title">Library Timing Extended — Exam Season</div>
+        <div class="notice-meta">📅 31 May 2026 &nbsp;•&nbsp; 📚 Central Library</div>
+        <div class="notice-desc">Exam season mein library 7:00 AM se 10:00 PM tak khuli rahegi. Reading hall mein mobile silent rakhein. Issue/return 9 AM – 6 PM.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge new">NEW</span></div>
+        <div class="notice-title">MP Scholarship 2.0 Portal Open — Apply Now</div>
+        <div class="notice-meta">📅 20 May 2026 &nbsp;•&nbsp; 🎓 Scholarship Cell</div>
+        <div class="notice-desc">SC/ST/OBC aur EWS students ke liye MP Scholarship 2.0 portal open hai. Last date 30 June 2026. Documents: Marksheet, Aadhar, Income Certificate, Bank passbook.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="badge info">INFO</span></div>
+        <div class="notice-title">Holiday Notice — Eid ul-Adha 17 June</div>
+        <div class="notice-meta">📅 15 May 2026 &nbsp;•&nbsp; 📋 Administration</div>
+        <div class="notice-desc">College 17 June 2026 ko Eid ul-Adha ke upalaksha mein band rahega. Agli class 18 June se regular schedule anusaar.</div>
+      </div>
+
+      <!-- NAYI NOTICE YAHAN ADD KARO:
+      <div class="card">
+        <div class="card-header"><span class="badge info">INFO</span></div>
+        <div class="notice-title">APNI NOTICE KA HEADING</div>
+        <div class="notice-meta">📅 DATE • DEPARTMENT</div>
+        <div class="notice-desc">Yahan notice ki detail likho.</div>
+      </div>
+      -->
+
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div id="gallery" class="section">
+  <div class="container">
+    <div class="section-title">🖼️ College Photo Gallery</div>
+    <div class="img-grid">
+
+      <div class="img-card">
+        <!-- Real image ke liye: img-placeholder hata ke <img src="building.jpg" style="width:100%;height:130px;object-fit:cover"> lagao -->
+        <div class="img-placeholder">🏛️</div>
+        <div class="img-label">Main Building — SMSGASC</div>
+      </div>
+      <div class="img-card">
+        <div class="img-placeholder">🔬</div>
+        <div class="img-label">Science Laboratory</div>
+      </div>
+      <div class="img-card">
+        <div class="img-placeholder">🏆</div>
+        <div class="img-label">Annual Sports Day 2025</div>
+      </div>
+      <div class="img-card">
+        <div class="img-placeholder">🎭</div>
+        <div class="img-label">Cultural Fest RANG 2025</div>
+      </div>
+      <div class="img-card">
+        <div class="img-placeholder">🌳</div>
+        <div class="img-label">Campus Green Zone</div>
+      </div>
+      <div class="img-card">
+        <div class="img-placeholder">📚</div>
+        <div class="img-label">Central Library</div>
+      </div>
+      <div class="img-card">
+        <div class="img-placeholder">🖥️</div>
+        <div class="img-label">Computer Lab</div>
+      </div>
+      <div class="img-card">
+        <div class="img-placeholder">🎓</div>
+        <div class="img-label">Convocation 2025</div>
+      </div>
+
+      <!-- NAYI PHOTO:
+      <div class="img-card">
+        <img src="TUMHARI_PHOTO.jpg" style="width:100%;height:130px;object-fit:cover">
+        <div class="img-label">PHOTO KA NAAM</div>
+      </div>
+      -->
+
+    </div>
+    <div class="gallery-tip">💡 Real photo add karne ke liye: HTML file ke andar comment padho • Image file HTML ke saath same folder mein rakhein • src="filename.jpg" mein naam daalein</div>
+  </div>
+</div>
+
+<!-- VIDEOS -->
+<div id="videos" class="section">
+  <div class="container">
+    <div class="section-title">▶️ Video Resources</div>
+
+    <!-- VIDEO: href mein apna YouTube/Drive link dalo -->
+    <a class="video-card" href="https://youtube.com" target="_blank">
+      <div class="video-thumb">🎬</div>
+      <div>
+        <div class="vtitle">College Orientation 2026 — Welcome Video</div>
+        <div class="vmeta">📅 June 2026 &nbsp;•&nbsp; 12:45 min <span class="vplatform yt">YouTube</span></div>
+      </div>
+    </a>
+
+    <a class="video-card" href="https://youtube.com" target="_blank">
+      <div class="video-thumb">📊</div>
+      <div>
+        <div class="vtitle">Physics Lecture Series — Prof. Sharma (Full Playlist)</div>
+        <div class="vmeta">📅 May 2026 &nbsp;•&nbsp; 20 videos <span class="vplatform yt">YouTube</span></div>
+      </div>
+    </a>
+
+    <a class="video-card" href="https://drive.google.com" target="_blank">
+      <div class="video-thumb">💼</div>
+      <div>
+        <div class="vtitle">Placement Preparation Seminar — Resume & Interview Tips</div>
+        <div class="vmeta">📅 10 May 2026 &nbsp;•&nbsp; 45 min <span class="vplatform drive">Google Drive</span></div>
+      </div>
+    </a>
+
+    <a class="video-card" href="https://youtube.com" target="_blank">
+      <div class="video-thumb">🏆</div>
+      <div>
+        <div class="vtitle">Sports Day Highlights — SMSGASC 2025</div>
+        <div class="vmeta">📅 April 2025 &nbsp;•&nbsp; 8:20 min <span class="vplatform yt">YouTube</span></div>
+      </div>
+    </a>
+
+    <a class="video-card" href="https://youtube.com" target="_blank">
+      <div class="video-thumb">🎭</div>
+      <div>
+        <div class="vtitle">RANG 2025 Cultural Fest — Best Moments</div>
+        <div class="vmeta">📅 Dec 2025 &nbsp;•&nbsp; 22 min <span class="vplatform yt">YouTube</span></div>
+      </div>
+    </a>
+
+    <!-- NAYI VIDEO:
+    <a class="video-card" href="YOUTUBE_LINK_YAHAN" target="_blank">
+      <div class="video-thumb">🎬</div>
+      <div>
+        <div class="vtitle">VIDEO KA NAAM</div>
+        <div class="vmeta">📅 DATE • DURATION <span class="vplatform yt">YouTube</span></div>
+      </div>
+    </a>
+    -->
+
+  </div>
+</div>
+
+<!-- LINKS -->
+<div id="links" class="section">
+  <div class="container">
+    <div class="section-title">🔗 Important Links</div>
+    <div class="link-grid">
+
+      <a class="link-card" href="https://mponline.gov.in" target="_blank">
+        <span class="link-icon">🎓</span>
+        <div class="link-name">Student Portal</div>
+        <div class="link-desc">Marks, Attendance, Admit Card</div>
+      </a>
+      <a class="link-card" href="https://mponline.gov.in" target="_blank">
+        <span class="link-icon">📋</span>
+        <div class="link-name">Exam Registration</div>
+        <div class="link-desc">Online form & fee payment</div>
+      </a>
+      <a class="link-card" href="https://scholarshipportal.mp.nic.in" target="_blank">
+        <span class="link-icon">💰</span>
+        <div class="link-name">MP Scholarship 2.0</div>
+        <div class="link-desc">SC/ST/OBC/EWS — Apply</div>
+      </a>
+      <a class="link-card" href="https://nptel.ac.in" target="_blank">
+        <span class="link-icon">📚</span>
+        <div class="link-name">NPTEL Courses</div>
+        <div class="link-desc">Free certified courses</div>
+      </a>
+      <a class="link-card" href="https://internshala.com" target="_blank">
+        <span class="link-icon">🏢</span>
+        <div class="link-name">Placement / Internship</div>
+        <div class="link-desc">Job & internship portal</div>
+      </a>
+      <a class="link-card" href="#" target="_blank">
+        <span class="link-icon">📖</span>
+        <div class="link-name">Library OPAC</div>
+        <div class="link-desc">Book search & availability</div>
+      </a>
+      <a class="link-card" href="https://highereducation.mp.gov.in" target="_blank">
+        <span class="link-icon">🏛️</span>
+        <div class="link-name">MP Higher Education</div>
+        <div class="link-desc">Official MP portal</div>
+      </a>
+      <a class="link-card" href="https://results.mponline.gov.in" target="_blank">
+        <span class="link-icon">📊</span>
+        <div class="link-name">Results Portal</div>
+        <div class="link-desc">MP University results</div>
+      </a>
+      <a class="link-card" href="#" target="_blank">
+        <span class="link-icon">💬</span>
+        <div class="link-name">WhatsApp Group</div>
+        <div class="link-desc">Students Squad — Join</div>
+      </a>
+
+      <!-- NAYI LINK:
+      <a class="link-card" href="URL_YAHAN" target="_blank">
+        <span class="link-icon">🔗</span>
+        <div class="link-name">LINK KA NAAM</div>
+        <div class="link-desc">Description</div>
+      </a>
+      -->
+
+    </div>
+  </div>
+</div>
+
+<!-- CONTACTS -->
+<div id="contacts" class="section">
+  <div class="container">
+    <div class="section-title">📞 Faculty & Department Contacts</div>
+    <div class="contact-grid">
+
+      <div class="contact-card">
+        <div class="contact-avatar">👨‍💼</div>
+        <div class="contact-name">College Principal</div>
+        <div class="contact-role">SMSGASC Bhopal</div>
+        <div class="contact-info">
+          <div>📞 0755-XXXXXXX</div>
+          <div>✉️ principal@smsgasc.ac.in</div>
+          <div>🕐 10 AM – 1 PM</div>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">🧑‍🔬</div>
+        <div class="contact-name">Physics Department</div>
+        <div class="contact-role">HOD — Physics</div>
+        <div class="contact-info">
+          <div>📞 0755-XXXXXXX</div>
+          <div>✉️ physics@smsgasc.ac.in</div>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">🧪</div>
+        <div class="contact-name">Chemistry Department</div>
+        <div class="contact-role">HOD — Chemistry</div>
+        <div class="contact-info">
+          <div>📞 0755-XXXXXXX</div>
+          <div>✉️ chemistry@smsgasc.ac.in</div>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">📐</div>
+        <div class="contact-name">Mathematics Department</div>
+        <div class="contact-role">HOD — Mathematics</div>
+        <div class="contact-info">
+          <div>📞 0755-XXXXXXX</div>
+          <div>✉️ maths@smsgasc.ac.in</div>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">💻</div>
+        <div class="contact-name">Computer Science Dept.</div>
+        <div class="contact-role">HOD — CS / IT</div>
+        <div class="contact-info">
+          <div>📞 0755-XXXXXXX</div>
+          <div>✉️ cs@smsgasc.ac.in</div>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">🏢</div>
+        <div class="contact-name">T&P Cell</div>
+        <div class="contact-role">Training & Placement</div>
+        <div class="contact-info">
+          <div>📞 0755-XXXXXXX</div>
+          <div>✉️ tnp@smsgasc.ac.in</div>
+          <div>🕐 9 AM – 5 PM</div>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">📋</div>
+        <div class="contact-name">Exam Cell</div>
+        <div class="contact-role">Examination Department</div>
+        <div class="contact-info">
+          <div>📞 0755-XXXXXXX</div>
+          <div>✉️ exam@smsgasc.ac.in</div>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">🆘</div>
+        <div class="contact-name">Students Squad Help</div>
+        <div class="contact-role">Website — Krishnkant</div>
+        <div class="contact-info">
+          <div>💬 WhatsApp preferred</div>
+          <div>📱 Contact via college</div>
+        </div>
+      </div>
+
+      <!-- NAYI CONTACT:
+      <div class="contact-card">
+        <div class="contact-avatar">👤</div>
+        <div class="contact-name">NAAM</div>
+        <div class="contact-role">DESIGNATION</div>
+        <div class="contact-info">
+          <div>📞 NUMBER</div>
+          <div>✉️ EMAIL</div>
+        </div>
+      </div>
+      -->
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="squad-name">⚡ STUDENTS SQUAD ⚡</div>
+  <div class="divider"></div>
+  <div class="college-full">
+    SHRIMANT MADHAVRAO SCINDIA GOVT. ADARSH SCIENCE COLLEGE<br>
+    Bhopal, Madhya Pradesh
+  </div>
+  <div class="code-by">💻 CODE BY &nbsp;<span>KRISHNKANT</span></div>
+  <div class="copy">© 2026 Students Squad • Made with ❤️ for SMSGASC Students</div>
+</div>
+
+<script>
+  function showSection(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (btn) btn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  function filterNotices() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('#notice-list .card').forEach(card => {
+      card.style.display = card.textContent.toLowerCase().includes(q) ? 'block' : 'none';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    const inp = document.getElementById('searchInput');
+    if (inp) inp.addEventListener('keypress', e => { if (e.key === 'Enter') filterNotices(); });
+  });
+</script>
+</body>
+</html>
